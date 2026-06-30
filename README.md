@@ -1,29 +1,34 @@
-# AI Agent Governance & Handoff System
+# 🤖 AI Agent Governance & Handoff System
 
 [简体中文](#简体中文) | English
 
-A lightweight, developer-focused framework designed to standardize workflows, enforce repository hygiene, and maintain context continuity for AI coding assistants (including **Claude Code**, **Codex**, **Hermes Agent**, **Antigravity**, **Cursor**, and **Windsurf**).
+A lightweight, developer-focused framework designed to **eliminate the context gap and onboarding friction when switching between different AI coding assistants** (such as **Claude Code**, **Codex**, **Hermes Agent**, **Antigravity**, **Cursor**, and **Windsurf**) on the same project.
 
 ---
 
 ## Why This Exists
 
-AI coding assistants are highly capable, but they often suffer from "context fragmentation" across sessions. When an agent picks up a task, it may:
-1. Lose track of the overall project roadmap and next steps.
-2. Violate existing directory layouts by dropping config files, tests, or scratch scripts in random locations.
-3. Commit architectural changes without documenting the rationale.
+When developing a project, you often switch between different AI agents to leverage their unique strengths. However, this creates a major pain point: **every new agent session starts with a blank slate**. You have to manually re-explain:
+1. The project's overall roadmap and what was *just* completed.
+2. The coding standards and directory layout rules.
+3. The technical decisions and logic behind recent modifications.
 
-This system establishes a self-documenting **Active Dashboard** inside your codebase. It forces agents to read the current state upon onboarding, keep the directory structure synchronized, and log their actions at the end of each session.
+This system acts as a **universal handoff protocol**. By forcing every agent to maintain a standardized, self-updating **Active Dashboard** and **Development Log** in the repository, any incoming agent can read the files and immediately resume work exactly where the last one left off—zero explanations required.
 
 ---
 
 ## Core Mechanisms
 
 ```text
-[Onboarding] ──> Read Dashboard & Dev Log ──> Execute Tasks ──> Run Tests/Lint ──> Update Dashboard & Log ──> [Handoff]
+ [AI Agent A]                                                         [AI Agent B]
+  (Finishes)                                                           (Starts)
+      │                                                                   │
+      ▼                                                                   ▼
+Writes Handoff Log ──> [ Active Dashboard & Dev Log ] ──> Reads Handoff Log & Onboards
+Updates Task list      (README.md / CLAUDE.md / AI.md)    Knows context instantly
 ```
 
-1. **Active Dashboard (README.md / CLAUDE.md)**: A single source of truth maintained by the AI agent containing the current file structure and live task statuses.
+1. **Active Dashboard (README.md / CLAUDE.md / AI.md)**: A single source of truth updated by the working agent containing the current file structure and live task statuses.
 2. **Reverse-Chronological Dev Log**: A chronological journal appended by the agent at the end of every session, capturing *Actions*, *Decisions*, *Build Status*, and *Next Steps*.
 3. **Directory Hygiene Boundaries**: Enforced separation between source code, tests, docs, and temporary scratchpads (git-ignored `.scratch/` directories).
 
@@ -31,7 +36,7 @@ This system establishes a self-documenting **Active Dashboard** inside your code
 
 ## Platform Support Matrix
 
-| Tool / Agent | Target File | Mechanism |
+| Tool / Agent | Target File | Onboarding Mechanism |
 | :--- | :--- | :--- |
 | **Claude Code** | `CLAUDE.md` | Reads build/test commands and project rules at startup. |
 | **Antigravity / Codex** | `SKILL.md` | Loads as a custom skill/tool rule dynamically from `.agents/`. |
@@ -90,28 +95,33 @@ MIT License. Feel free to customize it for your specific tech stacks (Node.js, P
 
 # AI Agent 项目接管与自我治理规范
 
-这是一个轻量级、面向开发者的项目治理框架，用于规范 AI 编程助手（包括 **Claude Code**、**Codex**、**Hermes Agent**、**Antigravity**、**Cursor** 以及 **Windsurf**）的工作流，并确保多次开发会话之间的上下文连续性。
+这是一个轻量级、面向开发者的项目治理框架，旨在**消除在同一个项目上切换不同 AI 助手时（如 Claude Code, Codex, Hermes Agent, Antigravity, Cursor, Windsurf）的信息差与接管摩擦**。
 
 ---
 
 ## 解决的问题
 
-AI 编码助手虽然强大，但在跨会话开发时经常面临“上下文碎片化”的问题：
-1. 迷失项目蓝图，不知道前人做到了哪一步，下一步该做什么。
-2. 破坏目录规范，把临时脚本、配置文件或测试代码杂乱地丢在根目录或源码区。
-3. 做了关键架构调整，却未记录任何决策背景和改动原因。
+在实际开发中，我们经常会在同一个项目里混用不同的 AI 工具以发挥各自所长。但这也带来了一个巨大的痛点：**每次切换 AI 助手，它对项目当前的进度都是一无所知的**。你必须不厌其烦地重新向它说明：
+1. 项目的整体进度、当前进行到哪一步、下一步该做什么。
+2. 本项目的目录结构规范和代码编写约束。
+3. 最近代码修改背后的设计意图和技术决策。
 
-本规范通过在仓库中建立一个自我更新的**活体看板**（Active Dashboard），强制 AI 助手在接管时阅读状态、在开发时维护文件树、并在结束时撰写交接日志。
+本规范充当了 **AI Agent 之间的“万能交接协议”**。通过在仓库中建立一个自我更新的**活体看板**（Active Dashboard），让每一个工作的 AI 在退出前自动更新状态并撰写日志，任何新接入的 AI 助手只需读取该文档，即可立即进入状态，无缝接力开发。
 
 ---
 
 ## 核心机制
 
 ```text
-[接管项目] ──> 阅读看板与开发日志 ──> 执行任务 ──> 运行测试/校验 ──> 更新看板与日志 ──> [会话结束交接]
+ [AI 助手 A]                                                           [AI 助手 B]
+ (工作结束)                                                            (接手工作)
+     │                                                                     │
+     ▼                                                                     ▼
+写入交接日志 ───> [ 统一活体看板 & 开发日志 ] ───> 读取交接日志 & 初始化 onboarding
+更新任务看板     (README.md / CLAUDE.md / AI.md)   瞬间消除信息差，立即开始编码
 ```
 
-1. **活体看板 (README.md / CLAUDE.md)**：由 AI 助手在开发中实时维护的单一事实来源，包含最新文件树和当前任务状态。
+1. **活体看板 (README.md / CLAUDE.md / AI.md)**：由 AI 助手在开发中实时维护的单一事实来源，包含最新文件树和当前任务状态。
 2. **逆序开发日志**：AI 助手在每次会话结束前记录的简短日志，包括所做更改、技术选型决策及明确的下一步交接任务。
 3. **严格的目录边界**：清晰定义生产代码、测试、以及临时脚本的存放位置，禁止非生产文件污染主干目录（引入 `.gitignore` 的 `.scratch/` 目录）。
 

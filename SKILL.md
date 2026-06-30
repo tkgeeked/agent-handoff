@@ -1,39 +1,43 @@
 ---
 name: ai-agent-governance
-description: Standardizes project governance and workspace handoffs for multiple AI agents (including Claude Code, Codex, Hermes Agent, and Antigravity). Enforces the use of a live project dashboard (README.md/CLAUDE.md) and development logs to ensure seamless session continuity.
+description: Enforces seamless context handoffs and project governance for multiple AI agents (including Claude Code, Codex, Hermes Agent, and Antigravity). Instructs the AI to maintain a self-documenting project dashboard and reverse-chronological development logs to eliminate onboarding friction between different AI sessions.
 ---
 
 # AI Agent Governance & Handoff Specification
 
-This specification defines a standardized workflow and project-governance system compatible with all modern coding agents (such as **Claude Code**, **Codex**, **Hermes Agent**, and **Antigravity**). It ensures that any agent taking over a project inherits a clear roadmap, directory conventions, and a reverse-chronological development log.
+This skill establishes a standardized workflow and behavioral specification for AI agents taking over, maintaining, or handing off workspaces. **Its primary objective is to eliminate the context gap and onboarding friction when switching between different AI agents (e.g., Claude Code, Codex, Hermes, Antigravity) on the same project.**
+
+It ensures that you (the active AI agent) maintain a "live project dashboard" and "development log" so that the next agent can resume work instantly with zero information loss.
 
 ---
 
 ## 1. Multi-Agent Compatibility Layer
 
-Different agents look for different configuration entry points in the workspace root. The governance system adapts to each:
+Different agents read configuration and rules from different file locations. Adapt your governance to the active environment:
 
 -   **Claude Code**: Reads configuration and commands from `CLAUDE.md` at the root.
 -   **Antigravity / Codex**: Reads custom instructions from `SKILL.md` (within customizations) or `.agents/`.
 -   **Cursor / Windsurf**: Reads rules from `.cursorrules` or `.windsurfrules`.
--   **Hermes Agent & Others**: Read onboarding instructions and context from the project `README.md` (in a designated `## 🤖 AI Agent Entrypoint` section) or a standalone `AI.md`.
+-   **Hermes Agent & Others**: Read onboarding instructions and context from the project `README.md` (specifically the `## 🤖 AI Agent Entrypoint` section) or a standalone `AI.md`.
 
 ---
 
-## 2. Agent Onboarding Checklist
+## 2. Onboarding Protocol (Eliminating the Information Gap)
 
-Whenever you (the AI Agent) take over a workspace, you **MUST** perform the following steps before modifying any code:
+Whenever you take over a workspace or begin a session, you **MUST** execute these onboarding steps before writing any code:
 
-1.  **Locate the Agent Entry Point**:
-    - Search for `CLAUDE.md`, `README.md` (look for the "AI Agent Entrypoint" section), or `AI.md`.
+1.  **Identify the Handoff Document**:
+    - Locate `CLAUDE.md`, `README.md` (look for the "AI Agent Entrypoint" section), or `AI.md` in the workspace root.
     - If none exist, initialize the project dashboard using the templates in the [resources/](resources/) folder.
 2.  **Verify Commands & Environment**:
     - Identify the correct commands to **build**, **run**, **lint**, and **test** the project.
-3.  **Map the Structure**:
-    - Confirm the file placement rules (e.g., where production source, tests, and configurations are expected to live).
-4.  **Read the Active Task Tracker & Development Log**:
-    - Review the checklist of pending/active tasks.
-    - Check the recent entries in the **Development Log** to understand what was done in the previous session and what context is handed over.
+3.  **Read the Active Task Tracker**:
+    - Review the pending and in-progress tasks to understand what needs to be worked on immediately.
+4.  **Analyze the Session History**:
+    - Check the recent entries in the **Development Log** to understand:
+      - What modifications were made in the previous session.
+      - Key technical decisions and design trade-offs.
+      - Specific tasks left for the next agent session.
 
 ---
 
@@ -56,9 +60,9 @@ Maintain high structural hygiene across all projects:
 
 ---
 
-## 5. Session Handover Protocol
+## 5. Session Handover Protocol (Preparing for the Next Agent)
 
-At the end of your current session:
+At the end of your current session, you **MUST** ensure the handoff is perfect for the next agent:
 1.  Verify the codebase compiles and all tests pass.
 2.  Update the **Task Tracker** (mark completed tasks, add newly discovered backlog items).
 3.  Append an entry to the **Development Log** (in `README.md`, `CLAUDE.md`, or `AI.md`):
