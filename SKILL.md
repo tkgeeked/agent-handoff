@@ -1,82 +1,82 @@
 ---
 name: agent-handoff
 slug: agent-handoff
-displayName: AgentHandoff
-version: 1.0.0
+displayName: AgentHandoff | AI Agent 项目接管与进度无缝交班协议 (支持 Claude Code / Cursor / Windsurf / Antigravity)
+version: 1.0.1
 author: tkgeeked
 homepage: https://github.com/tkgeeked/agent-handoff
-description: Enforces seamless context handoffs and project governance for multiple AI agents (including Claude Code, Codex, Hermes Agent, and Antigravity). Instructs the AI to maintain a self-documenting project dashboard and reverse-chronological development logs to eliminate onboarding friction between different AI sessions.
+description: 专为 AI Agent（包括 Claude Code、Cursor、Windsurf、Antigravity、Hermes 等）设计的项目治理与接管规范。通过自动维护的“活体看板”和“开发日志”，实现不同 AI 助手或多次会话之间的零信息差无缝接班开发，避免重复解释进度与规则。
 ---
 
-# AI Agent Governance & Handoff Specification
+# AI Agent 项目接管与进度交班规范 (AgentHandoff)
 
-This skill establishes a standardized workflow and behavioral specification for AI agents taking over, maintaining, or handing off workspaces. **Its primary objective is to eliminate the context gap and onboarding friction when switching between different AI agents (e.g., Claude Code, Codex, Hermes, Antigravity) on the same project.**
+本 Skill 为 AI 助手接管、维护或交接工作区定义了一套标准的工作流和行为规范。**其核心目标是消除在同一个项目上切换不同 AI 助手（如 Claude Code, Codex, Cursor, Windsurf, Hermes, Antigravity）时的信息差与接管摩擦。**
 
-It ensures that you (the active AI agent) maintain a "live project dashboard" and "development log" so that the next agent can resume work instantly with zero information loss.
-
----
-
-## 1. Multi-Agent Compatibility Layer
-
-Different agents read configuration and rules from different file locations. Adapt your governance to the active environment:
-
--   **Claude Code**: Reads configuration and commands from `CLAUDE.md` at the root.
--   **Antigravity / Codex**: Reads custom instructions from `SKILL.md` (within customizations) or `.agents/`.
--   **Cursor / Windsurf**: Reads rules from `.cursorrules` or `.windsurfrules`.
--   **Hermes Agent & Others**: Read onboarding instructions and context from the project `README.md` (specifically the `## 🤖 AI Agent Entrypoint` section) or a standalone `AI.md`.
+它能确保你（当前处于活跃状态的 AI Agent）能够始终维护好项目中的“活体看板”与“开发日志”，以便下一个接手的 AI Agent 能够瞬间接管工作，实现零信息差开发。
 
 ---
 
-## 2. Onboarding Protocol (Eliminating the Information Gap)
+## 1. 多智能体（Multi-Agent）适配层
 
-Whenever you take over a workspace or begin a session, you **MUST** execute these onboarding steps before writing any code:
+不同的 AI 助手读取配置和规则的文件路径不同，请根据当前运行的 Agent 环境进行适配：
 
-1.  **Identify the Handoff Document**:
-    - Locate `CLAUDE.md`, `README.md` (look for the "AI Agent Entrypoint" section), or `AI.md` in the workspace root.
-    - If none exist, initialize the project dashboard using the templates in the [resources/](resources/) folder.
-2.  **Verify Commands & Environment**:
-    - Identify the correct commands to **build**, **run**, **lint**, and **test** the project.
-3.  **Read the Active Task Tracker**:
-    - Review the pending and in-progress tasks to understand what needs to be worked on immediately.
-4.  **Analyze the Session History**:
-    - Check the recent entries in the **Development Log** to understand:
-      - What modifications were made in the previous session.
-      - Key technical decisions and design trade-offs.
-      - Specific tasks left for the next agent session.
+- **Claude Code**：读取项目根目录下的 `CLAUDE.md` 以获取构建/测试命令和代码风格约束。
+- **Antigravity / Codex**：从 `.agents/` 目录或全局配置中读取 `SKILL.md`。
+- **Cursor / Windsurf**：读取根目录下的 `.cursorrules` 或 `.windsurfrules` 作为系统提示词（System Prompt）。
+- **Hermes / 通用 LLM**：通过优先扫描项目 `README.md`（特别是 `## 🤖 AI Agent Entrypoint` 锚点段落）或独立的 `AI.md` 文件来建立上下文。
 
 ---
 
-## 3. Maintaining the Live Dashboard
+## 2. AI 接管协议（消除信息差）
 
-You **MUST** keep the project dashboard updated:
--   **Directory Tree**: Update the directory tree layout in the documentation whenever files/folders are restructured.
--   **Task Tracker**: Update the status of tasks (`[ ]` to `[/]` or `[x]`) as you work.
--   **Development Log**: Append a summary entry at the end of your session (see Session Handoff Protocol below).
+每当你接管一个工作区或开始新的会话时，**必须**在编写代码前执行以下接管步骤：
+
+1. **定位交接文档**：
+   - 检查根目录下是否存在 `CLAUDE.md`、`README.md`（查找 `AI Agent Entrypoint` 段落）或 `AI.md`。
+   - 如果不存在任何看板文档，请使用 `resources/` 目录下的模板进行初始化。
+2. **确认环境与指令**：
+   - 明确用于**构建（build）**、**运行（run/dev）**、**格式化/规范校验（lint）**和**测试（test）**项目的正确命令。
+3. **查阅当前任务看板**：
+   - 阅读进行中（in-progress）和待办（pending）的任务列表，明确当前需要立即执行的具体工作。
+4. **分析历史开发日志**：
+   - 查阅**开发日志（Development Log）**中的最新记录，重点了解：
+     - 上一次会话中具体修改了哪些文件。
+     - 关键的技术决策与设计折中方案。
+     - 前一个 Agent 留给你的具体“下一步工作（Next Steps）”指引。
 
 ---
 
-## 4. Directory Layout & Hygiene Standards
+## 3. 实时维护活体看板
 
-Maintain high structural hygiene across all projects:
--   **Production Code**: Inside standard directories (`src/`, `lib/`, `app/`, etc.). Keep the root clean.
--   **Tests**: Place tests next to source files or in a dedicated `tests/` directory.
--   **Config Files**: Restrict root-level files to necessary environment and tool configurations.
--   **Scratch / Temporary Files**: Never commit debugging scripts or experimental files to production code folders. Use the agent-specific scratchpad or add a local `.scratch/` directory to `.gitignore`.
+你**必须**在开发过程中保持项目看板的实时更新：
+- **目录结构树**：一旦文件或目录发生重构/增删，立即更新文档中的项目结构树。
+- **任务追踪器**：随着工作的推进，实时更新任务状态（将 `[ ]` 更新为 `[/]` 或 `[x]`）。
+- **开发日志**：在当前会话结束前，追加最新的交接日志（参见下方会话交接协议）。
 
 ---
 
-## 5. Session Handoff Protocol (Preparing for the Next Agent)
+## 4. 目录布局与环境卫生规范
 
-At the end of your current session, you **MUST** ensure the handoff is perfect for the next agent:
-1.  Verify the codebase compiles and all tests pass.
-2.  Update the **Task Tracker** (mark completed tasks, add newly discovered backlog items).
-3.  Append an entry to the **Development Log** (in `README.md`, `CLAUDE.md`, or `AI.md`):
-    ```markdown
-    ### YYYY-MM-DD (Session Summary)
-    - **Agent**: [e.g., Claude Code, Antigravity, etc.]
-    - **Actions**: Files modified and features implemented.
-    - **Decisions**: Key technical decisions, trade-offs, or dependencies added.
-    - **Current State**: Project health, build, and test status.
-    - **Next Steps**: Explicit tasks for the next agent to pick up.
-    ```
-4.  Provide a summary of these handoff notes in your final message to the user.
+在所有项目中保持高度的结构整洁：
+- **生产代码**：存放在标准源码目录（如 `src/`、`lib/`、`app/`）。保持根目录干净。
+- **测试代码**：将单元测试/集成测试存放在专用 `tests/` 目录或与源文件同级（使用标准测试后缀）。
+- **配置文件**：根目录仅限放置必要的工具和构建配置文件。
+- **临时/沙箱文件**：严禁在生产代码目录中遗留任何临时调试脚本或测试输出。请统一使用 Agent 的系统临时目录，或将本地调试文件放入已被 `.gitignore` 忽略的 `.scratch/` 文件夹中。
+
+---
+
+## 5. 会话交接协议（为下一个 Agent 铺路）
+
+在结束当前会话前，你**必须**为下一个接手的 AI Agent 做好完美的交接工作：
+1. 确保代码能够顺利编译，并且所有自动化测试全部通过。
+2. 更新**任务追踪看板**（标记已完成的任务，整理并添加新发现的待办事项）。
+3. 向**开发日志**（在 `README.md`、`CLAUDE.md` 或 `AI.md` 中）追加一条格式如下的最新日志：
+   ```markdown
+   ### YYYY-MM-DD (会话交接摘要)
+   - **执行 Agent**：[例如 Claude Code, Antigravity 等]
+   - **具体改动**：修改的文件及实现的功能列表。
+   - **技术决策**：关键的技术实现思路、折中考量或新增的依赖库。
+   - **项目现状**：当前项目健康度、构建与测试的通过状态。
+   - **接班任务**：明确留给下一个 Agent/开发者的具体待办事项。
+   ```
+4. 在对用户的最终回复中，简明扼要地总结上述交接要点。
